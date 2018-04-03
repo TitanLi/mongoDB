@@ -22,5 +22,4 @@ d172c1d83cc0        mongo               "docker-entrypoint.s…"   4 minutes ago
 3ae9ecf0bac2        mongo               "docker-entrypoint.s…"   4 minutes ago       Up 4 minutes        0.0.0.0:3002->27017/tcp   mongo2
 d58f5363226b        mongo               "docker-entrypoint.s…"   4 minutes ago       Up 4 minutes        0.0.0.0:3001->27017/tcp   mongo1
 4831cd5e825b        mongo               "docker-entrypoint.s…"   5 minutes ago       Up 4 minutes        0.0.0.0:3000->27017/tcp   mongos
-
 ```
