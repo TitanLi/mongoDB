@@ -37,6 +37,7 @@ Setting up our containers：
 ```
 $ sudo docker run -tid -p 3001:27017 --name mongo1 --net my-mongo-cluster mongo mongod --replSet my-mongo-rs1
 $ sudo docker run -tid -p 3002:27017 --name mongo2 --net my-mongo-cluster mongo mongod --replSet my-mongo-rs1
+$ sudo docker run -tid -p 3003:27017 --name mongoArbiter --net my-mongo-cluster mongo mongod --replSet my-mongo-rs1
 ```
 * docker run：start container from an image
 * -p 3001:27017：expose port 27017 to port 3001 on the localhost
@@ -49,7 +50,7 @@ Setting up replication：
 ```
 $ sudo docker exec -ti mongo1 mongo
 > db = (new Mongo('localhost:27017')).getDB('test')
-> config={"_id":"my-mongo-rs1","members":[{"_id":0,"host":"mongo1:27017"},{"_id":1,"host":"mongo2:27017"}]}
+> config={"_id":"my-mongo-rs1","members":[{"_id":0,"host":"mongo1:27017"},{"_id":1,"host":"mongo2:27017"},{"_id":2,"host":"mongoArbiter:27017",arbiterOnly:true}]}
 ```
 * _id key in the config,should be the same as the --replSet "my-mongo-rs1"
 
@@ -60,7 +61,14 @@ $ sudo docker exec -ti mongo1 mongo
 ```
 then should change to something like this：
 ```
+container mongo1:
 my-mongo-rs1:PRIMARY>
+
+container mongo2:
+my-mongo-rs1:SECONDARY>
+
+container mongoArbiter:
+my-mongo-rs1:ARBITER>
 ```
 ## 測試複製集：
 新增資料：
