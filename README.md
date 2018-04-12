@@ -88,3 +88,8 @@ my-mongo-rs1:PRIMARY> db2.setSlaveOk()
 my-mongo-rs1:PRIMARY> db2.mycollection.find()
 ```
 * db2.setSlaveOk()：command to let the shell know that we re intentionally querying a database that is not our primary
+
+## connection mongo
+```
+$ mongo "mongodb://mongo1,mongo2,mongoArbiter/?replicaSet=my-mongo-rs1"
+```
