@@ -35,9 +35,14 @@ $ sudo sudo docker network create my-mongo-cluster
 ```
 Setting up our containers：
 ```
-$ sudo docker run -tid -p 3001:27017 --name mongo1 --net my-mongo-cluster mongo mongod --replSet my-mongo-rs1
-$ sudo docker run -tid -p 3002:27017 --name mongo2 --net my-mongo-cluster mongo mongod --replSet my-mongo-rs1
-$ sudo docker run -tid -p 3003:27017 --name mongoArbiter --net my-mongo-cluster mongo mongod --replSet my-mongo-rs1
+複製集一：
+$ sudo docker run -tid -p 3001:27017 --name mongo1 --net my-mongo-cluster mongo mongod --replSet rs0
+$ sudo docker run -tid -p 3002:27017 --name mongo2 --net my-mongo-cluster mongo mongod --replSet rs0
+$ sudo docker run -tid -p 3003:27017 --name mongoArbiter3 --net my-mongo-cluster mongo mongod --replSet rs0
+複製集二：
+$ sudo docker run -tid -p 3004:27017 --name mongo4 --net my-mongo-cluster mongo mongod --replSet rs1
+$ sudo docker run -tid -p 3005:27017 --name mongo5 --net my-mongo-cluster mongo mongod --replSet rs1
+$ sudo docker run -tid -p 3006:27017 --name mongoArbiter6 --net my-mongo-cluster mongo mongod --replSet rs1
 ```
 * docker run：start container from an image
 * -p 3001:27017：expose port 27017 to port 3001 on the localhost
@@ -48,9 +53,14 @@ $ sudo docker run -tid -p 3003:27017 --name mongoArbiter --net my-mongo-cluster 
 
 Setting up replication：
 ```
+複製集一：
 $ sudo docker exec -ti mongo1 mongo
 > db = (new Mongo('localhost:27017')).getDB('test')
-> config={"_id":"my-mongo-rs1","members":[{"_id":0,"host":"mongo1:27017"},{"_id":1,"host":"mongo2:27017"},{"_id":2,"host":"mongoArbiter:27017",arbiterOnly:true}]}
+> config={"_id":"rs0","members":[{"_id":0,"host":"mongo1:27017"},{"_id":1,"host":"mongo2:27017"},{"_id":2,"host":"mongoArbiter3:27017",arbiterOnly:true}]}
+複製集二：
+$ sudo docker exec -ti mongo4 mongo
+> db = (new Mongo('localhost:27017')).getDB('test')
+> config={"_id":"rs1","members":[{"_id":0,"host":"mongo4:27017"},{"_id":1,"host":"mongo5:27017"},{"_id":2,"host":"mongoArbiter6:27017",arbiterOnly:true}]}
 ```
 * _id key in the config,should be the same as the --replSet "my-mongo-rs1"
 
